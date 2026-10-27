@@ -158,12 +158,40 @@ select,input[type=text],input[type=search]{border:1px solid var(--line);backgrou
 
 /* tab bar */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
 nav.tabs button{background:none;border:0;border-radius:10px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:700;color:var(--muted)}
 nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 nav.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
 
 .empty{color:var(--muted);font-size:14px;padding:6px 0}
+.summary{display:flex;align-items:center;gap:14px}
+.summary .big{font-family:var(--font-display);font-weight:800;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.summary .big small{font-size:22px;color:var(--muted)}
+.summary .grow{flex:1;min-width:0}
+.habits{--sc:var(--good)}
+.streak{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.streak.hot{color:var(--accent)}
+.hcard{display:flex;flex-direction:column;gap:10px}
+.hcard .top{display:flex;gap:8px;align-items:center}
+.hcard .top input{flex:1;font-weight:700}
+.daypick{display:flex;gap:4px;flex-wrap:wrap}
+.daypick button{width:38px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:12px;font-weight:700}
+.daypick button[aria-pressed="true"]{background:var(--good);color:#fff;border-color:transparent}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:var(--surface-2);border-radius:10px;padding:8px 10px}
+.stats b{display:block;font-family:var(--font-display);font-size:24px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats span{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dots{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:3px}
+.dots i{aspect-ratio:1;border-radius:3px;background:var(--surface-2);max-width:100%}
+.dots i.y{background:var(--good)}
+.dots i.n{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.dots i.x{background:transparent;box-shadow:inset 0 0 0 1px var(--line);opacity:.45}
+.dots i.p{background:var(--surface-2);opacity:.5}
+.dots i.t{outline:2px solid var(--accent);outline-offset:-1px}
+.hbar{display:block;height:3px;border-radius:2px;background:var(--surface-2);overflow:hidden;margin-top:auto}
+.hbar b{display:block;height:100%;background:var(--good)}
+.btn.danger{background:var(--bad);color:#fff}
+nav.tabs button{font-size:11px}
 @media (max-width:420px){
   .cell{min-height:54px;padding:4px 3px}
   .cell .n{font-size:12px}
@@ -190,6 +218,7 @@ nav.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent
   <div class="in">
     <button data-tab="today"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</button>
     <button data-tab="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+    <button data-tab="habits"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Habits</button>
     <button data-tab="plan"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l2 2 3-4"/></svg>Plan</button>
     <button data-tab="exercises"><svg viewBox="0 0 24 24"><path d="M6 8v8M3 10v4M18 8v8M21 10v4M6 12h12"/></svg>Exercises</button>
   </div>
@@ -414,7 +443,38 @@ function exercisesFor(sid,block){return state.custom[sid+"|"+block]||base(sid,bl
 
 /* ---------- ui state ---------- */
 const TODAY=new Date(); TODAY.setHours(0,0,0,0);
-let ui={tab:"today",day:iso(TODAY),month:new Date(TODAY.getFullYear(),TODAY.getMonth(),1),editSid:"upper",editBlock:null,filter:"all",q:""};
+const ALL_DAYS=[0,1,2,3,4,5,6];
+if(!Array.isArray(state.habits)) state.habits=[
+  {id:"h-bed",name:"In bed by 23:00",days:ALL_DAYS,start:"2026-10-27"},
+  {id:"h-protein",name:"Hit 120 g protein",days:ALL_DAYS,start:"2026-10-27"},
+  {id:"h-water",name:"Drink 2.5 L water",days:ALL_DAYS,start:"2026-10-27"},
+  {id:"h-phone",name:"No phone in bed",days:ALL_DAYS,start:"2026-10-27"}
+];
+if(!state.hdone||typeof state.hdone!=="object") state.hdone={};
+const dueOn=(h,d)=>h.days.includes(dow(d))&&iso(d)>=h.start;
+const hDone=(h,k)=>(state.hdone[k]||[]).includes(h.id);
+function streakOf(h){
+  let d=new Date(TODAY),n=0;
+  if(dueOn(h,d)&&!hDone(h,iso(d))) d=addDays(d,-1);
+  for(let i=0;i<500;i++){
+    if(iso(d)<h.start) break;
+    if(dueOn(h,d)){ if(hDone(h,iso(d))) n++; else break; }
+    d=addDays(d,-1);
+  }
+  return n;
+}
+function bestOf(h){
+  let d=fromIso(h.start),run=0,best=0;
+  while(d<=TODAY){ if(dueOn(h,d)){ if(hDone(h,iso(d))){run++;best=Math.max(best,run)} else if(iso(d)!==iso(TODAY)) run=0; } d=addDays(d,1); }
+  return best;
+}
+function rateOf(h,days){
+  let due=0,done=0;
+  for(let i=0;i<days;i++){const d=addDays(TODAY,-i);if(dueOn(h,d)){due++;if(hDone(h,iso(d)))done++}}
+  return due?Math.round(done/due*100):0;
+}
+function habitsFor(k){const d=fromIso(k);return state.habits.filter(h=>dueOn(h,d))}
+let ui={tab:"today",day:iso(TODAY),month:new Date(TODAY.getFullYear(),TODAY.getMonth(),1),editSid:"upper",editBlock:null,filter:"all",q:"",delArm:null};
 try{const t=sessionStorage.getItem("wb-tab");if(t)ui.tab=t}catch(e){}
 
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -428,6 +488,7 @@ function render(){
   const v=document.getElementById("view");
   if(ui.tab==="today") v.innerHTML=renderToday();
   else if(ui.tab==="calendar") v.innerHTML=renderCalendar();
+  else if(ui.tab==="habits") v.innerHTML=renderHabits();
   else if(ui.tab==="plan") v.innerHTML=renderPlan();
   else v.innerHTML=renderLibrary();
 }
@@ -441,6 +502,22 @@ function dayPanel(dIso,heading){
     <button class="iconbtn" data-act="next-day" aria-label="Next day">›</button></div>`;
   h+=p?`<p class="sub" style="text-align:center;margin-top:4px"><b>${esc(p.name)}</b> · ${esc(p.note)}</p>`:`<p class="sub" style="text-align:center">Before the plan starts.</p>`;
   h+=`<div class="stack">`;
+  {
+    const hs=habitsFor(dIso), hd=hs.filter(x=>hDone(x,dIso)).length;
+    const blk=p?p.block:"home";
+    const real=sids.filter(s=>exercisesFor(s,blk).length);
+    const sd=real.filter(s=>((state.done[dIso]||{})[s]||[]).length>=exercisesFor(s,blk).length).length;
+    const total=hs.length+real.length, got=hd+sd;
+    h+=`<section class="card"><div class="summary"><div class="big">${got}<small>/${total}</small></div><div class="grow"><div class="label">${isToday?"Today's checklist":"Checklist"}</div>
+      <div style="font-size:14px;color:var(--muted)">${hd}/${hs.length} habits · ${sd}/${real.length} sessions</div>
+      <div class="progress"><i style="width:${total?Math.round(got/total*100):0}%;background:var(--accent)"></i></div></div></div></section>`;
+    h+=`<section class="card session habits" style="--sc:var(--good)"><div class="session-head"><h3>Habits</h3><button class="btn ghost small" data-act="go-habits">Edit</button></div>
+      ${hs.length?`<ul class="ex-list">${hs.map(x=>{const on=hDone(x,dIso),st=streakOf(x);return `<li class="ex-row${on?" done":""}">
+        <input type="checkbox" id="hc-${dIso}-${esc(x.id)}" data-act="tick-h" data-d="${dIso}" data-h="${esc(x.id)}" ${on?"checked":""} aria-label="Done: ${esc(x.name)}">
+        <label class="ex-name" for="hc-${dIso}-${esc(x.id)}">${esc(x.name)}</label>
+        <span class="streak${st>=3?" hot":""}">${st?st+"-day streak":""}</span></li>`}).join("")}</ul>`:`<p class="empty">No habits for this day. Add some in the Habits tab.</p>`}
+    </section>`;
+  }
   if(!sids.length) h+=`<div class="card"><p class="empty">Nothing planned. Add a session below.</p></div>`;
   for(const sid of sids){
     const meta=S[sid]; if(!meta) continue;
@@ -489,13 +566,36 @@ function renderCalendar(){
     const allDone=sids.length&&sids.every(s=>{const n=exercisesFor(s,(phaseOf(d)||{block:"home"}).block).length;return n&&(dd[s]||[]).length>=n});
     cells+=`<button class="cell${d.getMonth()!==m.getMonth()?" out":""}${k===iso(TODAY)?" today":""}${k===ui.day?" sel":""}" data-act="pick" data-d="${k}" aria-label="${esc(fmt(d,{weekday:"long",day:"numeric",month:"long"}))}">
       <span class="n">${d.getDate()}${allDone?`<span class="ok">✓</span>`:state.days[k]?`<span class="edited" title="Adjusted"></span>`:""}</span>
-      <span class="bars">${sids.slice(0,4).map(s=>{const n=exercisesFor(s,(phaseOf(d)||{block:"home"}).block).length;const done=n&&((dd[s]||[]).length>=n);return `<i style="--sc:var(${S[s].c})" class="${done?"d":""}"></i>`}).join("")}</span></button>`;
+      ${(()=>{const hs=habitsFor(k);if(!hs.length||k>iso(TODAY))return "";const r=hs.filter(x=>hDone(x,k)).length/hs.length;return `<span class="hbar" style="order:9"><b style="width:${Math.round(r*100)}%"></b></span>`})()}<span class="bars">${sids.slice(0,4).map(s=>{const n=exercisesFor(s,(phaseOf(d)||{block:"home"}).block).length;const done=n&&((dd[s]||[]).length>=n);return `<i style="--sc:var(${S[s].c})" class="${done?"d":""}"></i>`}).join("")}</span></button>`;
   }
   const legend=[["upper","Upper"],["lower","Lower"],["full","Full body"],["rehab","Rehab"],["home","Home session"],["run","Run"],["gk","GK drills"],["yoga","Yoga"],["walk","Walk"]];
   return `<div class="cal-head"><button class="iconbtn" data-act="prev-m" aria-label="Previous month">‹</button><h2>${esc(fmt(m,{month:"long",year:"numeric"}))}</h2><button class="iconbtn" data-act="next-m" aria-label="Next month">›</button></div>
   <div class="cal">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<div class="dow">${x}</div>`).join("")}${cells}</div>
-  <div class="legend">${legend.map(([s,l])=>`<span><i style="--sc:var(${S[s].c})"></i>${l}</span>`).join("")}<span><i style="--sc:var(--accent);width:6px;height:6px;border-radius:50%"></i>Adjusted</span></div>
+  <div class="legend">${legend.map(([s,l])=>`<span><i style="--sc:var(${S[s].c})"></i>${l}</span>`).join("")}<span><i style="--sc:var(--good);height:3px"></i>Habits done</span><span><i style="--sc:var(--accent);width:6px;height:6px;border-radius:50%"></i>Adjusted</span></div>
   ${dayPanel(ui.day)}`;
+}
+
+function renderHabits(){
+  const names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  let h=`<h2>Habits</h2><p class="sub">Tick them off on the Today tab. Here you add habits, pick their days, and watch your streaks.</p>
+  <div class="card"><div class="row"><input type="text" id="newHabit" placeholder="New habit, e.g. Read 10 pages" style="flex:1" maxlength="60">
+  <button class="btn small" data-act="add-h">Add</button></div></div><div class="stack" style="margin-top:12px">`;
+  if(!state.habits.length) h+=`<div class="card"><p class="empty">No habits yet. Add your first one above.</p></div>`;
+  state.habits.forEach((x,idx)=>{
+    const st=streakOf(x),best=bestOf(x),rate=rateOf(x,30);
+    let dots="";
+    for(let i=27;i>=0;i--){const d=addDays(TODAY,-i),k=iso(d);const cls=k<x.start?"p":!dueOn(x,d)?"x":hDone(x,k)?"y":"n";dots+=`<i class="${cls}${i===0?" t":""}" title="${esc(fmt(d,{day:"numeric",month:"short"}))}"></i>`}
+    h+=`<section class="card hcard">
+      <div class="top"><input type="text" id="hn-${esc(x.id)}" value="${esc(x.name)}" data-act="h-name" data-h="${esc(x.id)}" aria-label="Habit name" maxlength="60">
+        <div class="ctl" style="display:flex;gap:4px"><button class="iconbtn" style="min-width:34px;height:34px;padding:0" data-act="h-up" data-i="${idx}" aria-label="Move up">↑</button>
+        <button class="iconbtn" style="min-width:34px;height:34px;padding:0" data-act="h-down" data-i="${idx}" aria-label="Move down">↓</button></div></div>
+      <div class="daypick" role="group" aria-label="Days">${names.map((n,i)=>`<button data-act="h-day" data-h="${esc(x.id)}" data-day="${i}" aria-pressed="${x.days.includes(i)}">${n}</button>`).join("")}</div>
+      <div class="stats"><div><b>${st}</b><span>Streak</span></div><div><b>${best}</b><span>Best</span></div><div><b>${rate}%</b><span>30 days</span></div></div>
+      <div><div class="label" style="margin-bottom:6px">Last 4 weeks</div><div class="dots">${dots}</div></div>
+      <div class="row" style="justify-content:flex-end"><button class="btn small ${ui.delArm===x.id?"danger":"ghost"}" data-act="h-del" data-h="${esc(x.id)}">${ui.delArm===x.id?"Tap again to delete":"Delete"}</button></div>
+    </section>`;
+  });
+  return h+`</div>`;
 }
 
 function renderPlan(){
@@ -606,6 +706,15 @@ document.addEventListener("click",e=>{
   if(a==="toggle-s"){const d=t.dataset.d,s=t.dataset.s;let cur=[...sessionsFor(d)];cur=cur.includes(s)?cur.filter(x=>x!==s):[...cur,s];
     cur.sort((x,y)=>SESSION_ORDER.indexOf(x)-SESSION_ORDER.indexOf(y));state.days[d]=cur;save();render();return}
   if(a==="reset-day"){delete state.days[t.dataset.d];save();render();return}
+  if(a==="go-habits"){ui.tab="habits";render();window.scrollTo(0,0);return}
+  if(a==="add-h"){addHabit();return}
+  if(a==="h-day"){const x=state.habits.find(h=>h.id===t.dataset.h),dd=+t.dataset.day;if(!x)return;
+    x.days=x.days.includes(dd)?x.days.filter(v=>v!==dd):[...x.days,dd].sort();if(!x.days.length)x.days=[dd];save();render();return}
+  if(a==="h-up"||a==="h-down"){const i=+t.dataset.i,j=a==="h-up"?i-1:i+1;if(j<0||j>=state.habits.length)return;
+    const l=state.habits;[l[i],l[j]]=[l[j],l[i]];save();render();return}
+  if(a==="h-del"){const id=t.dataset.h;if(ui.delArm!==id){ui.delArm=id;render();return}
+    state.habits=state.habits.filter(h=>h.id!==id);for(const k in state.hdone){state.hdone[k]=state.hdone[k].filter(v=>v!==id);if(!state.hdone[k].length)delete state.hdone[k]}
+    ui.delArm=null;save();render();return}
   if(a==="filter"){ui.filter=t.dataset.t;render();return}
   if(a==="up"||a==="down"||a==="rm"){const l=ensureCustom(),i=+t.dataset.i;
     if(a==="rm")l.splice(i,1);else{const j=a==="up"?i-1:i+1;if(j<0||j>=l.length)return;[l[i],l[j]]=[l[j],l[i]]}save();render();return}
@@ -617,7 +726,10 @@ document.addEventListener("change",e=>{
   const t=e.target, a=t.dataset&&t.dataset.act;
   if(a==="tick"){const d=t.dataset.d,s=t.dataset.s,i=+t.dataset.i;state.done[d]=state.done[d]||{};let l=state.done[d][s]||[];
     l=t.checked?[...new Set([...l,i])]:l.filter(x=>x!==i);state.done[d][s]=l;save();render();return}
-  if(t.id==="importFile"&&t.files&&t.files[0]){const r=new FileReader();r.onload=()=>{try{const s=JSON.parse(r.result);if(!s||typeof s!=="object"||!("done" in s))throw 0;state=Object.assign({v:1,custom:{},days:{},done:{},pain:{},notes:{}},s);save();render();document.getElementById("backupMsg").textContent="Backup loaded."}catch(err){document.getElementById("backupMsg").textContent="That file isn't a We're Back backup."}};r.readAsText(t.files[0]);return}
+  if(t.id==="importFile"&&t.files&&t.files[0]){const r=new FileReader();r.onload=()=>{try{const s=JSON.parse(r.result);if(!s||typeof s!=="object"||!("done" in s))throw 0;state=Object.assign({v:1,custom:{},days:{},done:{},pain:{},notes:{},habits:[],hdone:{}},s);save();render();document.getElementById("backupMsg").textContent="Backup loaded."}catch(err){document.getElementById("backupMsg").textContent="That file isn't a We're Back backup."}};r.readAsText(t.files[0]);return}
+  if(a==="tick-h"){const d=t.dataset.d,id=t.dataset.h;let l=state.hdone[d]||[];l=t.checked?[...new Set([...l,id])]:l.filter(v=>v!==id);
+    if(l.length)state.hdone[d]=l;else delete state.hdone[d];save();render();return}
+  if(a==="h-name"){const x=state.habits.find(h=>h.id===t.dataset.h);if(x&&t.value.trim()){x.name=t.value.trim();save()}return}
   if(a==="edit-sid"){ui.editSid=t.value;render();return}
   if(a==="edit-block"){ui.editBlock=t.value;render();return}
   if(a==="dose"){ensureCustom()[+t.dataset.i][1]=t.value.trim()||"—";save();return}
@@ -627,8 +739,10 @@ document.addEventListener("input",e=>{
   if(a==="note"){const d=t.dataset.d;if(t.value.trim())state.notes[d]=t.value;else delete state.notes[d];save();return}
   if(a==="q"){ui.q=t.value;const pos=t.selectionStart;render();const q=document.getElementById("q");q.focus();q.setSelectionRange(pos,pos)}
 });
-document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("sheetHost").innerHTML=""});
-document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{ui.tab=b.dataset.tab;try{sessionStorage.setItem("wb-tab",ui.tab)}catch(e){}if(ui.tab==="today"){ui.day=iso(TODAY)}render();window.scrollTo(0,0)}));
+function addHabit(){const el=document.getElementById("newHabit");const n=(el&&el.value||"").trim();if(!n){el&&el.focus();return}
+  state.habits.push({id:"h-"+Date.now().toString(36),name:n,days:[...ALL_DAYS],start:iso(TODAY)});save();render();const ne=document.getElementById("newHabit");if(ne)ne.focus()}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="newHabit"){e.preventDefault();addHabit();return}if(e.key==="Escape")document.getElementById("sheetHost").innerHTML=""});
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>{ui.tab=b.dataset.tab;ui.delArm=null;try{sessionStorage.setItem("wb-tab",ui.tab)}catch(e){}if(ui.tab==="today"){ui.day=iso(TODAY)}render();window.scrollTo(0,0)}));
 
 render();
 
