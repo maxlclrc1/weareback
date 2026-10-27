@@ -747,7 +747,16 @@ document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("clic
 render();
 
 /* ---------- offline ---------- */
-if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})})}
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{
+      const check=()=>{if(navigator.onLine)reg.update().catch(()=>{})};
+      check(); document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")check()});
+    }).catch(()=>{});
+    let reloaded=false;
+    navigator.serviceWorker.addEventListener("controllerchange",()=>{if(reloaded)return;reloaded=true;location.reload()});
+  });
+}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 </script>
 </body>
