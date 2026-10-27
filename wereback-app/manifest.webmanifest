@@ -1,0 +1,14 @@
+{
+  "name": "We're Back",
+  "short_name": "We're Back",
+  "description": "Joint-friendly 12-week training plan with calendar and exercise guides.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f151b",
+  "theme_color": "#16212b",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
