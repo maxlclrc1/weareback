@@ -153,7 +153,7 @@ select,input[type=text],input[type=search]{border:1px solid var(--line);backgrou
 
 /* tab bar */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
-nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
 nav.tabs button{background:none;border:0;border-radius:10px;padding:7px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:700;color:var(--muted)}
 nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 nav.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft)}
@@ -186,7 +186,32 @@ nav.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent
 .hbar{display:block;height:3px;border-radius:2px;background:var(--surface-2);overflow:hidden;margin-top:auto}
 .hbar b{display:block;height:100%;background:var(--good)}
 .btn.danger{background:var(--bad);color:#fff}
-nav.tabs button{font-size:11px}
+nav.tabs button{font-size:10.5px;padding:7px 2px}
+/* insights */
+:root{--heat-0:#26303a;--heat-1:#25503a;--heat-2:#2e7550;--heat-3:#43a26a;--heat-4:#72d69d;--safe-band:rgba(92,195,138,.10)}
+.chart-card svg{display:block;width:100%;height:auto;overflow:visible}
+.chart-card svg text{fill:var(--muted);font-family:var(--font-body);font-size:10px;font-variant-numeric:tabular-nums}
+.chart-card svg text.ink{fill:var(--fg);font-weight:700}
+.chart-card svg .grid{stroke:var(--line);stroke-width:1}
+.chart-card svg [data-act="tip"]{cursor:pointer}
+.chart-card svg [data-act="tip"].on{stroke:var(--fg);stroke-width:1.5}
+.readout{margin:8px 0 0;font-size:13px;color:var(--muted);min-height:20px;font-variant-numeric:tabular-nums}
+.readout b{color:var(--fg)}
+.heat-legend{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);justify-content:flex-end;margin-top:8px}
+.heat-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.tile b{display:block;font-family:var(--font-display);font-size:30px;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile span{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tile small{display:block;font-size:12px;color:var(--muted)}
+.chart-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.chart-title .k{font-size:12px;color:var(--muted)}
+.hbars{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.hbars .r{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:4px 10px;align-items:center}
+.hbars .r span{font-weight:600;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbars .r em{font-style:normal;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.hbars .r .track{grid-column:1 / -1;height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.hbars .r .track i{display:block;height:100%;background:var(--good);border-radius:4px}
 @media (max-width:420px){
   .cell{min-height:54px;padding:4px 3px}
   .cell .n{font-size:12px}
@@ -214,6 +239,7 @@ nav.tabs button{font-size:11px}
     <button data-tab="today"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</button>
     <button data-tab="calendar"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
     <button data-tab="habits"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>Habits</button>
+    <button data-tab="insights"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Insights</button>
     <button data-tab="plan"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l2 2 3-4"/></svg>Plan</button>
     <button data-tab="exercises"><svg viewBox="0 0 24 24"><path d="M6 8v8M3 10v4M18 8v8M21 10v4M6 12h12"/></svg>Exercises</button>
   </div>
@@ -535,6 +561,7 @@ function render(){
   else if(ui.tab==="calendar") v.innerHTML=renderCalendar();
   else if(ui.tab==="habits") v.innerHTML=renderHabits();
   else if(ui.tab==="review") v.innerHTML=renderReview();
+  else if(ui.tab==="insights") v.innerHTML=renderInsights();
   else if(ui.tab==="plan") v.innerHTML=renderPlan();
   else v.innerHTML=renderLibrary();
 }
@@ -623,6 +650,115 @@ function renderCalendar(){
   <div class="legend">${legend.map(([s,l])=>`<span><i style="--sc:var(${S[s].c})"></i>${l}</span>`).join("")}<span><i style="--sc:var(--good);height:3px"></i>Habits done</span><span><i style="--sc:var(--accent);width:6px;height:6px;border-radius:50%"></i>Adjusted</span></div>
   ${dayPanel(ui.day)}`;
 }
+
+/* ---------- insights ---------- */
+function dayScore(k){
+  const d=fromIso(k); if(d>TODAY) return null;
+  const hs=habitsFor(k); let due=hs.length, got=hs.filter(h=>hDone(h,k)).length;
+  const blk=(phaseOf(d)||{block:"home"}).block;
+  for(const sid of sessionsFor(k)){const n=exercisesFor(sid,blk).length; if(!n) continue; due++; got+=Math.min(1,(((state.done[k]||{})[sid])||[]).length/n);}
+  return due?{due,got,pct:got/due}:null;
+}
+const heatColor=p=>p==null?"var(--heat-0)":p<=0?"var(--heat-0)":p<.4?"var(--heat-1)":p<.7?"var(--heat-2)":p<1?"var(--heat-3)":"var(--heat-4)";
+const pctTxt=p=>Math.round(p*100)+"%";
+function barPath(x,y,w,h,r){if(h<=0)return "";r=Math.min(r,h,w/2);return `M${x},${y+h}V${y+r}Q${x},${y} ${x+r},${y}H${x+w-r}Q${x+w},${y} ${x+w},${y+r}V${y+h}Z`}
+function renderInsights(){
+  const curMon=mondayOf(TODAY), planMon=mondayOf(HEAD_START);
+  let start=addDays(curMon,-14*7); if(start<planMon) start=planMon;
+  const WEEKS=15, CELL=19, GAP=3, STEP=CELL+GAP, LEFT=22, TOP=16;
+  // heatmap
+  let cells="", months="", lastM=-1;
+  for(let w=0;w<WEEKS;w++){
+    const mon=addDays(start,w*7);
+    for(let i=0;i<7;i++){ const d=addDays(mon,i); if(d.getMonth()!==lastM&&d.getDate()<=7&&i===0){} }
+    const firstOfWeekMonth=[0,1,2,3,4,5,6].map(i=>addDays(mon,i)).find(d=>d.getDate()===1);
+    if(w===0||firstOfWeekMonth){const lab=(firstOfWeekMonth||mon);months+=`<text x="${LEFT+w*STEP}" y="10">${esc(fmt(lab,{month:"short"}))}</text>`}
+    for(let i=0;i<7;i++){
+      const d=addDays(mon,i),k=iso(d),fut=d>TODAY,sc=fut?null:dayScore(k);
+      const tip=fut?`${fmt(d,{weekday:"short",day:"numeric",month:"short"})}: coming up`:sc?`${fmt(d,{weekday:"short",day:"numeric",month:"short"})}: <b>${pctTxt(sc.pct)}</b> done (${Math.round(sc.got*10)/10}/${sc.due})`:`${fmt(d,{weekday:"short",day:"numeric",month:"short"})}: nothing planned`;
+      cells+=`<rect x="${LEFT+w*STEP}" y="${TOP+i*STEP}" width="${CELL}" height="${CELL}" rx="4" fill="${fut?"var(--surface-2)":heatColor(sc?sc.pct:null)}" ${fut?'opacity=".35"':""} ${k===iso(TODAY)?'stroke="var(--accent)" stroke-width="2"':""} data-act="tip" data-ro="ro-heat" data-tip="${esc(tip)}"/>`;
+    }
+  }
+  const dl=["M","","W","","F","","S"].map((l,i)=>l?`<text x="0" y="${TOP+i*STEP+13}">${l}</text>`:"").join("");
+  const hw=LEFT+WEEKS*STEP, hh=TOP+7*STEP;
+  // tiles
+  let ticks=0,daysLogged=0; for(const k in state.done){let any=false;for(const sid in state.done[k]){ticks+=state.done[k][sid].length;if(state.done[k][sid].length)any=true}if(any||state.hdone[k])daysLogged++}
+  for(const k in state.hdone){if(!state.done[k])0}
+  const best=state.habits.reduce((m,h)=>Math.max(m,bestOf(h)),0);
+  const last7=[...Array(7)].map((_,i)=>state.pain[iso(addDays(TODAY,-i))]).filter(v=>v!=null);
+  const prev7=[...Array(7)].map((_,i)=>state.pain[iso(addDays(TODAY,-7-i))]).filter(v=>v!=null);
+  const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+  const p7=avg(last7),pp=avg(prev7);
+  let wk=dayScoreRange(curMon,TODAY);
+  // pain chart, last 30 days
+  let N=14; for(let i=29;i>=14;i--){if(state.pain[iso(addDays(TODAY,-i))]!=null){N=i+1;break}}
+  const W=320,H=150,L=24,R=10,T=10,B=24,pw=W-L-R,ph=H-T-B;
+  const x=i=>L+i*(pw/(N-1)), y=v=>T+ph-(v/10)*ph;
+  const pts=[]; for(let i=0;i<N;i++){const d=addDays(TODAY,-(N-1-i)),v=state.pain[iso(d)];if(v!=null)pts.push({i,v,d})}
+  let pain="";
+  pain+=`<rect x="${L}" y="${y(3)}" width="${pw}" height="${y(0)-y(3)}" fill="var(--safe-band)"/>`;
+  for(const v of [0,3,5,10]) pain+=`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" ${v===3?'stroke-dasharray="4 4"':""}/><text x="${L-6}" y="${y(v)+3}" text-anchor="end">${v}</text>`;
+  pain+=`<text x="${L+4}" y="${y(0)-5}">Safe zone (0–3)</text>`;
+  for(const i of [0,Math.round((N-1)/2),N-1]){const d=addDays(TODAY,-(N-1-i));pain+=`<text x="${x(i)}" y="${H-6}" text-anchor="${i===0?"start":i===N-1?"end":"middle"}">${i===N-1?"Today":esc(fmt(d,{day:"numeric",month:"short"}))}</text>`}
+  if(pts.length>1) pain+=`<path d="${pts.map((p,j)=>(j?"L":"M")+x(p.i).toFixed(1)+","+y(p.v).toFixed(1)).join("")}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pain+=pts.map(p=>`<circle cx="${x(p.i)}" cy="${y(p.v)}" r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><circle cx="${x(p.i)}" cy="${y(p.v)}" r="12" fill="transparent" data-act="tip" data-ro="ro-pain" data-tip="${esc(fmt(p.d,{weekday:"short",day:"numeric",month:"short"}))}: <b>${p.v}/10</b>"/>`).join("");
+  if(!pts.length) pain+=`<text x="${L+pw/2}" y="${T+ph/2}" text-anchor="middle" class="ink">Log a pain check on Today to start this chart</text>`;
+  // weekly completion, last 8 weeks
+  const wks=[]; for(let i=7;i>=0;i--){const m=addDays(curMon,-7*i); if(addDays(m,6)<planMon) continue; wks.push({m,sc:dayScoreRange(m,i===0?TODAY:addDays(m,6))})}
+  const BW=320,BH=140,bl=26,bt=14,bb=22,bph=BH-bt-bb, slot=(BW-bl-4)/Math.max(wks.length,4), bw=Math.min(30,slot*.6);
+  let bars="";
+  for(const v of [0,50,100]) bars+=`<line class="grid" x1="${bl}" x2="${BW-4}" y1="${bt+bph-v/100*bph}" y2="${bt+bph-v/100*bph}"/><text x="${bl-6}" y="${bt+bph-v/100*bph+3}" text-anchor="end">${v}%</text>`;
+  wks.forEach((w,i)=>{const cx=bl+slot*i+slot/2, p=w.sc?w.sc.pct:0, h=p*bph, cur=i===wks.length-1;
+    bars+=`<path d="${barPath(cx-bw/2,bt+bph-h,bw,h,4)}" fill="var(--good)" ${cur?"":'opacity=".75"'}/>`;
+    bars+=`<rect x="${cx-slot/2}" y="${bt}" width="${slot}" height="${bph}" fill="transparent" data-act="tip" data-ro="ro-week" data-tip="Week of ${esc(fmt(w.m,{day:"numeric",month:"short"}))}: <b>${w.sc?pctTxt(p):"–"}</b> done"/>`;
+    bars+=`<text x="${cx}" y="${BH-6}" text-anchor="middle">${esc(fmt(w.m,{day:"numeric",month:"short"}))}</text>`;
+    if(cur&&w.sc) bars+=`<text x="${cx}" y="${bt+bph-h-5}" text-anchor="middle" class="ink">${pctTxt(p)}</text>`;
+  });
+  // weekday pattern, last 8 weeks
+  const wd=[0,1,2,3,4,5,6].map(()=>({g:0,d:0}));
+  for(let i=1;i<57;i++){const d=addDays(TODAY,-i);if(d<HEAD_START)break;const sc=dayScore(iso(d));if(sc){wd[dow(d)].g+=sc.got;wd[dow(d)].d+=sc.due}}
+  const wdP=wd.map(o=>o.d?o.g/o.d:null);
+  const bestD=wdP.reduce((b,v,i)=>v!=null&&(b<0||v>wdP[b])?i:b,-1), worstD=wdP.reduce((b,v,i)=>v!=null&&(b<0||v<wdP[b])?i:b,-1);
+  const names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], longN=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  const ds=(BW-bl-4)/7, dbw=26; let wdb="";
+  for(const v of [0,50,100]) wdb+=`<line class="grid" x1="${bl}" x2="${BW-4}" y1="${bt+bph-v/100*bph}" y2="${bt+bph-v/100*bph}"/><text x="${bl-6}" y="${bt+bph-v/100*bph+3}" text-anchor="end">${v}%</text>`;
+  wdP.forEach((p,i)=>{const cx=bl+ds*i+ds/2,h=(p||0)*bph;
+    wdb+=`<path d="${barPath(cx-dbw/2,bt+bph-h,dbw,h,4)}" fill="var(--good)" ${i===bestD?"":'opacity=".6"'}/>`;
+    wdb+=`<rect x="${cx-ds/2}" y="${bt}" width="${ds}" height="${bph}" fill="transparent" data-act="tip" data-ro="ro-wd" data-tip="${longN[i]}s: <b>${p==null?"no data yet":pctTxt(p)}</b>"/>`;
+    wdb+=`<text x="${cx}" y="${BH-6}" text-anchor="middle" ${i===bestD?'class="ink"':""}>${names[i]}</text>`;
+  });
+  // per habit
+  const hr=state.habits.map(h=>({h,r:rateOf(h,30),st:streakOf(h)})).sort((a,b)=>b.r-a.r);
+  const painNote=p7==null?"No pain checks in the last 7 days.":pp==null?`Last 7 days average <b>${p7.toFixed(1)}/10</b>.`:`Last 7 days <b>${p7.toFixed(1)}/10</b>, ${p7<pp-0.3?"down from":p7>pp+0.3?"up from":"about the same as"} ${pp.toFixed(1)} the week before.`;
+  const onlyFew=daysLogged<7;
+  return `<h2>Insights</h2><p class="sub">${onlyFew?"Your charts fill in as you log. Give it a week or two and the patterns get real.":"How your habits, training and joints are trending."}</p>
+  <div class="stack">
+    <div class="tiles">
+      <div class="tile"><span>This week</span><b>${wk?pctTxt(wk.pct):"–"}</b><small>of habits and sessions done</small></div>
+      <div class="tile"><span>Avg pain, 7 days</span><b>${p7==null?"–":p7.toFixed(1)}</b><small>${pp==null||p7==null?"out of 10":p7<pp-0.3?"down from "+pp.toFixed(1)+" last week":p7>pp+0.3?"up from "+pp.toFixed(1)+" last week":"steady vs last week"}</small></div>
+      <div class="tile"><span>Exercises done</span><b>${ticks}</b><small>ticked off in total</small></div>
+      <div class="tile"><span>Best streak</span><b>${best}</b><small>days in a row, any habit</small></div>
+    </div>
+    <section class="card chart-card"><div class="chart-title"><h3>Consistency</h3><span class="k">Each square is a day</span></div>
+      <div style="overflow-x:auto;margin-top:10px"><svg viewBox="-2 0 ${hw+2} ${hh}" role="img" aria-label="Daily completion heat map">${months}${dl}${cells}</svg></div>
+      <div class="heat-legend">Less <i style="background:var(--heat-0)"></i><i style="background:var(--heat-1)"></i><i style="background:var(--heat-2)"></i><i style="background:var(--heat-3)"></i><i style="background:var(--heat-4)"></i> 100%</div>
+      <p class="readout" id="ro-heat">Tap a square to see that day.</p></section>
+    <section class="card chart-card"><div class="chart-title"><h3>Joint pain</h3><span class="k">Worst joint, last ${N} days</span></div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Pain over the last 30 days" style="margin-top:10px">${pain}</svg>
+      <p class="readout" id="ro-pain">${painNote}</p></section>
+    <section class="card chart-card"><div class="chart-title"><h3>Weekly completion</h3><span class="k">Habits + sessions</span></div>
+      <svg viewBox="0 0 ${BW} ${BH}" role="img" aria-label="Completion per week" style="margin-top:10px">${bars}</svg>
+      <p class="readout" id="ro-week">Tap a bar for that week.</p></section>
+    <section class="card chart-card"><div class="chart-title"><h3>Your best days</h3><span class="k">Average by weekday</span></div>
+      <svg viewBox="0 0 ${BW} ${BH}" role="img" aria-label="Completion by weekday" style="margin-top:10px">${wdb}</svg>
+      <p class="readout" id="ro-wd">${bestD<0?"Not enough data yet.":bestD===worstD?`So far you're most consistent on <b>${longN[bestD]}s</b>.`:`Strongest on <b>${longN[bestD]}s</b>, weakest on <b>${longN[worstD]}s</b>. Plan around that.`}</p></section>
+    <section class="card chart-card"><div class="chart-title"><h3>Habits</h3><span class="k">Last 30 days</span></div>
+      ${hr.length?`<div class="hbars">${hr.map(o=>`<div class="r"><span>${esc(o.h.name)}</span><em>${o.r}%</em><div class="track"><i style="width:${o.r}%"></i></div></div>`).join("")}</div>`:`<p class="empty">No habits yet.</p>`}
+      ${hr.length?`<p class="readout">${hr[hr.length-1].r<hr[0].r?`Weakest: <b>${esc(hr[hr.length-1].h.name)}</b>. Make that your focus this week.`:"All even so far."}</p>`:""}</section>
+    <button class="btn ghost" data-act="open-review">Open this week's review</button>
+  </div>`;
+}
+function dayScoreRange(a,b){let g=0,d=0;for(let x=new Date(a);x<=b;x=addDays(x,1)){const sc=dayScore(iso(x));if(sc){g+=sc.got;d+=sc.due}}return d?{got:g,due:d,pct:g/d}:null}
 
 function renderHabits(){
   const names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
@@ -756,6 +892,8 @@ document.addEventListener("click",e=>{
   if(a==="toggle-s"){const d=t.dataset.d,s=t.dataset.s;let cur=[...sessionsFor(d)];cur=cur.includes(s)?cur.filter(x=>x!==s):[...cur,s];
     cur.sort((x,y)=>SESSION_ORDER.indexOf(x)-SESSION_ORDER.indexOf(y));state.days[d]=cur;save();render();return}
   if(a==="reset-day"){delete state.days[t.dataset.d];save();render();return}
+  if(a==="tip"){const ro=document.getElementById(t.dataset.ro);if(ro)ro.innerHTML=t.dataset.tip;
+    const svg=t.closest("svg");if(svg)svg.querySelectorAll(".on").forEach(n=>n.classList.remove("on"));if(t.tagName==="rect"&&t.getAttribute("fill")!=="transparent")t.classList.add("on");return}
   if(a==="open-review"){ui.tab="review";ui.reviewWeek=mondayOf(TODAY);render();window.scrollTo(0,0);return}
   if(a==="rev-prev"||a==="rev-next"){ui.reviewWeek=addDays(ui.reviewWeek||mondayOf(TODAY),a==="rev-prev"?-7:7);render();return}
   if(a==="go-today"){ui.tab="today";ui.day=iso(TODAY);render();window.scrollTo(0,0);return}
