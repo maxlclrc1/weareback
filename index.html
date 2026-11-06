@@ -373,6 +373,44 @@ const EX = {
   gk_drills:{n:"Goalkeeper return drills",t:["running","groin"],s:"Do these first, fresh",
     how:["Week 9: pogo hops 3 × 10, drop-and-stick landings 3 × 5","Week 10: small broad jumps 3 × 5, 4 × 10 m sprints at 80%","Week 11: 6 × 10 m sprints at 90%, low dives onto a soft surface","Week 12: full-speed sprints, full dives, full training"],
     cue:"One step per week, only if pain stays at 5/10 or lower.",joint:"No box jumps in this plan."},
+  lying_punch:{n:"Lying punch",t:["shoulder","home","gym"],s:"Light dumbbell or water bottle",
+    how:["Lie on your back, knees bent, one arm pointing straight at the ceiling holding a light weight.","Keeping the elbow straight, push the weight higher by lifting your shoulder blade off the floor.","Lower slowly back down. Only the shoulder blade moves."],
+    cue:"Small movement, arm stays straight. Feel it under your armpit.",joint:"Strengthens the muscle that keeps your shoulder blade steady, with the arm in a pain-free spot."},
+  seated_row:{n:"Seated cable row",t:["back","upper","gym"],s:"Cable, neutral handle",
+    how:["Sit tall, feet on the platform, knees soft.","Pull the handle to your lower ribs, elbows close to your body.","Squeeze your shoulder blades, return slowly until arms are straight."],
+    cue:"Chest up, don't lean back to cheat.",joint:"Pulling is pain-free for you, so this builds your back and protects the shoulder."},
+  side_add:{n:"Side-lying adductor lift",t:["groin","home"],s:"Bodyweight",
+    how:["Lie on your side. Bend your top leg and put that foot on the floor in front of your bottom knee.","Keep the bottom leg straight and lift it about 15–20 cm.","Pause 1 second, lower slowly."],
+    cue:"Lift with your inner thigh, toes pointing forward.",joint:"Inner-thigh strength protects the pubic bone."},
+  copenhagen_long:{n:"Copenhagen plank (long lever)",t:["groin","core","gym"],s:"Bench",
+    how:["Lie on your side, top foot resting on a bench, bottom leg free.","Lift your hips so your body is straight, holding with your inner thigh.","Hold, then lower and switch sides."],
+    cue:"Only after the short lever is easy for 3 × 20 s.",joint:"The strongest-researched exercise for preventing groin problems."},
+  clamshell:{n:"Clamshell",t:["hips","knee","home"],s:"Band optional",
+    how:["Lie on your side, hips and knees bent, feet together.","Keeping your feet touching, lift your top knee like a clam opening.","Lower slowly."],
+    cue:"Don't roll backward. Hand on your hip to check.",joint:"Hip strength keeps your knees tracking well."},
+  spanish_squat:{n:"Spanish squat",t:["knee","legs","gym"],s:"Strong band or strap",
+    how:["Loop a strong band around a rack post and behind both knees.","Step back until it's tight, then sit back with your shins vertical.","Hold, torso upright."],
+    cue:"Shins stay vertical, let the band hold your knees back.",joint:"Loads the thigh while taking stress off the front of the knee. Great for knee pain."},
+  single_calf:{n:"Single-leg calf raise",t:["legs","knee","home"],s:"On a step",
+    how:["Stand on one foot on a step, holding on for balance.","Rise up high, pause, lower slowly below the step."],
+    cue:"Full range, slow down. Aim for 15 each leg.",joint:"Strong calves take load off your knees when you run."},
+  bulgarian:{n:"Bulgarian split squat",t:["knee","legs","gym"],s:"Bench, dumbbells optional",
+    how:["Back foot on a bench, front foot about a stride ahead.","Lower straight down until the back knee nearly touches the floor.","Drive up through the front heel."],
+    cue:"Front knee tracks over your toes. Bodyweight first.",joint:""},
+  wrist_curl:{n:"Wrist curl (palms up)",t:["wrist","home","gym"],s:"1–3 kg or water bottle",
+    how:["Sit, forearm resting on your thigh, palm up, wrist just past your knee.","Let the weight roll down to your fingers, then curl your wrist up.","Lower slowly."],
+    cue:"Light and slow. Tendons get stronger slowly.",joint:"Builds wrist strength for gripping and pushing."},
+  rev_wrist_curl:{n:"Reverse wrist curl (palms down)",t:["wrist","home","gym"],s:"Lighter than palms up",
+    how:["Same position, palm facing down.","Lift the back of your hand toward the ceiling.","Lower slowly over 3 seconds."],
+    cue:"Use even less weight than the palms-up version.",joint:"This side is usually the weak one when wrists hurt."},
+  forearm_rot:{n:"Forearm rotation",t:["wrist","home","gym"],s:"Hammer or dumbbell held at one end",
+    how:["Forearm on your thigh, hold a hammer or a dumbbell at one end, pointing up.","Slowly turn your palm down, then back up and over to palm up.","Control it both ways."],
+    cue:"Choke up on the handle to make it easier.",joint:""},
+  grip_squeeze:{n:"Grip squeeze",t:["wrist","home"],s:"Ball or rolled towel",
+    how:["Squeeze a tennis ball or a rolled towel hard.","Hold 10 seconds, relax 5."],cue:"Wrist straight while you squeeze.",joint:""},
+  test_item:{n:"Checkpoint test",t:["test"],s:"Do each item, write your pain number in Notes",
+    how:["Wall sit: 3 × 45 s","Copenhagen plank, short lever: 3 × 20 s each side","Side-lying external rotation: 2 × 15 with 2 kg","Single-leg calf raise: 15 each leg","From Phase 2 on: add the running step you're on"],
+    cue:"Pass = every item at 5/10 or lower, settled by the next morning.",joint:"Passed? Move on. Not yet? Repeat the last 2 weeks, then test again. That's normal."},
   city_walk:{n:"Walk",t:["recovery"],s:"Any pace",how:["Walk the city, explore, enjoy it."],cue:"Counts as recovery movement.",joint:""},
   y_breath:{n:"Breathing",t:["yoga"],s:"Lying on your back",how:["Lie on your back, knees bent.","In through the nose for 4 seconds, out for 6 seconds."],cue:"Long exhale calms everything down.",joint:""},
   y_catcow:{n:"Cat-cow on forearms",t:["yoga","back"],s:"8 slow rounds",how:["On forearms and knees.","Round your back up, then let it gently arch down.","Move with your breath."],cue:"Forearms keep the wrists out of it.",joint:""},
@@ -386,60 +424,72 @@ const EX = {
 
 /* ---------- sessions ---------- */
 const S = {
-  rehab:{n:"Home rehab",c:"--c-rehab",min:10},
-  home:{n:"Full home session",c:"--c-home",min:20},
-  home15:{n:"Home session (15 min)",c:"--c-home",min:15},
+  rehab:{n:"Home rehab",c:"--c-rehab",min:15},
+  home:{n:"Gym-ready session",c:"--c-home",min:25},
+  home15:{n:"Travel session",c:"--c-home",min:15},
   holds:{n:"Shoulder holds",c:"--c-rehab",min:3},
   mini:{n:"5-min minimum",c:"--c-rehab",min:5},
-  upper:{n:"Gym: Upper",c:"--c-upper",min:40,warm:true},
-  lower:{n:"Gym: Lower + groin",c:"--c-lower",min:40,warm:true},
-  full:{n:"Gym: Full body",c:"--c-full",min:40,warm:true},
+  upper:{n:"Gym: Upper",c:"--c-upper",min:45,warm:true},
+  lower:{n:"Gym: Lower + groin",c:"--c-lower",min:45,warm:true},
+  full:{n:"Gym: Full body",c:"--c-full",min:45,warm:true},
   run:{n:"Walk-jog",c:"--c-run",min:15},
   gk:{n:"Goalkeeper drills",c:"--c-gk",min:20},
+  test:{n:"Checkpoint test",c:"--accent",min:15},
   yoga:{n:"Nightly yoga",c:"--c-yoga",min:12},
   walk:{n:"Walk",c:"--c-rest",min:30},
   rest:{n:"Rest",c:"--c-rest",min:0}
 };
-const SESSION_ORDER=["upper","lower","full","rehab","home","home15","mini","run","gk","yoga","walk","rest"];
-const BLOCKS={home:"Home weeks",w12:"Weeks 1–2",w34:"Weeks 3–4",w58:"Weeks 5–8",w912:"Weeks 9–12+"};
-
-const holds3=[["scap_squeeze","2 × 10"],["sl_er","2 × 15 each"],["towel_row","2 × 15"]];
-const REHAB=[...holds3,["wall_sit","3 × 30–45 s"],["add_squeeze","5 × 10 s"],["glute_bridge","2 × 12"],["side_plank","2 × 20–30 s each"]];
+const SESSION_ORDER=["upper","lower","full","rehab","home","home15","mini","run","gk","test","yoga","walk","rest"];
+const BLOCKS={home:"Prep (home)",w12:"Phase 1 · Foundation",w34:"Phase 2 · Build",w58:"Phase 3 · Strength",w912:"Phase 4 · Back in goal"};
 const YOGA=[["y_breath","1 min"],["y_catcow","8 rounds"],["y_fig4","45 s each"],["y_twist","45 s each"],["y_bridge","5 × 5 s"],["y_ham","45 s each"],["y_child","1 min"],["y_legs","2–3 min"]];
+const late=w=>w==="w58"||w==="w912";
 
-function base(sid,block){
-  const w=block;
+function base(sid,w){
   switch(sid){
-    case "rehab": return REHAB;
-    case "home": return [...REHAB,["dead_bug","3 × 8 each"],["side_leg_raise","2 × 15 each"],["slr","2 × 12 each"],["bird_dog","3 × 8 each"]];
-    case "home15": return [...REHAB,["dead_bug","3 × 8 each"],["bird_dog","3 × 8 each"]];
-    case "holds": return [["hold_abd","1 × 60 s"],["hold_er","1 × 60 s"],["hold_ir","1 × 60 s"]];
     case "mini": return [["scap_squeeze","1 × 10"],["towel_row","1 × 15"],["wall_sit","2 × 30 s"],["add_squeeze","3 × 10 s"]];
+    case "rehab": return [
+      ["sl_er","2 × 15 each"],["towel_row","2 × 15"],["lying_punch","2 × 12"],
+      ["wall_sit","3 × 45 s"],
+      w==="home"||w==="w12"?["add_squeeze","5 × 10 s"]:["copenhagen_short","3 × 15–20 s each (on a sofa)"],
+      ["side_add","2 × 12 each"],["clamshell","2 × 15 each"],
+      ["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"]];
+    case "home": return [
+      ["sl_er","3 × 15 each"],["towel_row","3 × 15"],["lying_punch","3 × 12"],
+      ["wall_sit","4 × 45 s"],["glute_bridge","3 × 12"],["clamshell","2 × 15 each"],["calf_raise","3 × 15"],
+      ["add_squeeze","5 × 10 s"],["side_add","3 × 12 each"],["side_plank","2 × 30 s each"],["dead_bug","3 × 8 each"],
+      ["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"],["forearm_rot","2 × 12"],["grip_squeeze","3 × 10 s"]];
+    case "home15": return [
+      ["sl_er","2 × 15 each"],["towel_row","2 × 15"],["wall_sit","3 × 45 s"],["glute_bridge","2 × 12"],
+      ["add_squeeze","5 × 10 s"],["side_add","2 × 12 each"],["calf_raise","2 × 15"],["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"]];
+    case "holds": return [["hold_abd","1 × 60 s"],["hold_er","1 × 60 s"],["hold_ir","1 × 60 s"]];
     case "yoga": return YOGA;
     case "walk": return [["city_walk","30+ min"]];
     case "rest": return [];
-    case "run": return [["walk_jog","see week"]];
-    case "gk": return [["gk_drills","see week"]];
+    case "run": return [["walk_jog","see note"]];
+    case "gk": return [["gk_drills","see note"]];
+    case "test": return [["test_item","all items"]];
     case "upper": {
-      const r=[["sl_er","3 × 15 each"],["scap_squeeze","2 × 10"],["lat_pulldown",w==="w912"?"4 × 8–12":"3 × 10–12"]];
-      if(w==="w34") r.push(["band_row","3 × 12"]);
-      if(w==="w58"||w==="w912") r.push(["cable_row_1arm",w==="w912"?"4 × 10 each":"3 × 10 each"],["floor_press","3 × 10"]);
-      r.push(["face_pull","3 × 15"],["hammer_curl","3 × 10–12"],["rope_pushdown","3 × 12–15"],["pallof","3 × 10 each"],["dead_bug","3 × 8 each"]);
+      const r=[["sl_er",w==="w12"?"3 × 15 each (1 kg)":"3 × 12 each (2–3 kg)"],["lat_pulldown",late(w)?"4 × 8–10":"3 × 10–12"],["seated_row",late(w)?"4 × 8–10":"3 × 10–12"]];
+      if(w!=="w12") r.push(["cable_row_1arm","3 × 10 each"]);
+      if(late(w)) r.push(["floor_press",w==="w912"?"3 × 8–10":"3 × 10 (light)"]);
+      r.push(["face_pull","3 × 15"],["lying_punch","3 × 12"],["hammer_curl","3 × 10–12"],["rope_pushdown","3 × 12–15"],
+        ["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"]);
       return r;}
     case "lower": {
-      const r=[["wall_sit","4 × 30–45 s"],["hip_thrust",w==="w912"?"4 × 8–10":"3 × 10–12"],["leg_ext","3 × 12–15"],["ham_curl","3 × 10–12"],["hip_abd_machine","3 × 15"]];
-      if(w==="w12"||w==="home") r.push(["add_squeeze","5 × 10 s"]);
-      if(w==="w34") r.push(["hip_add_machine","3 × 12 (light)"]);
-      if(w==="w58"||w==="w912") r.push(["copenhagen_short","3 × 15–20 s each"],["step_up",w==="w912"?"3 × 8–10 each":"3 × 8 each"]);
-      r.push(["side_plank","2 × 30 s each"]);
+      const r=[w==="w12"?["wall_sit","4 × 45 s"]:["spanish_squat","4 × 45 s"]];
+      if(w==="w34") r.push(["goblet_box_squat","3 × 8–10"]);
+      if(w==="w58") r.push(["goblet_box_squat","4 × 8 (lower box)"],["step_up","3 × 8 each"]);
+      if(w==="w912") r.push(["bulgarian","3 × 8 each"],["goblet_box_squat","4 × 8"]);
+      r.push(["hip_thrust",late(w)?"4 × 8–10":"3 × 10–12"],["leg_ext","3 × 12–15"],["ham_curl","3 × 10–12"]);
+      r.push(w==="w12"?["add_squeeze","5 × 10 s"]:w==="w34"?["copenhagen_short","3 × 15 s each"]:w==="w58"?["copenhagen_short","3 × 20 s each"]:["copenhagen_long","3 × 15 s each"]);
+      r.push(w==="w12"?["side_add","3 × 12 each"]:["hip_add_machine","3 × 12 (light)"]);
+      r.push(late(w)?["single_calf","3 × 12 each"]:["calf_raise","3 × 15"],["side_plank","2 × 30 s each"]);
       return r;}
     case "full": {
-      const r=[["sl_er","2 × 15 each"]];
-      r.push(w==="w12"||w==="home"?["wall_sit","3 × 45 s"]:["goblet_box_squat","3 × 8–10"]);
-      r.push(["glute_bridge","3 × 12"],["ham_curl","3 × 12"],["lat_pulldown","3 × 10"]);
-      if(w==="w34") r.push(["band_row","3 × 12"]);
-      if(w==="w58"||w==="w912") r.push(["cable_row_1arm","3 × 10 each"]);
-      r.push(["face_pull","2 × 15"],["calf_raise","3 × 15"],["bird_dog","3 × 8 each"]);
+      const r=[["sl_er","2 × 15 each"],["lat_pulldown","3 × 10"],["seated_row","3 × 12"]];
+      r.push(w==="w12"?["glute_bridge","3 × 12"]:["goblet_box_squat","3 × 8–10"]);
+      r.push(["leg_ext","2 × 15"],["clamshell","2 × 15 each"],["face_pull","2 × 15"],["pallof","3 × 10 each"],["dead_bug","3 × 8 each"],
+        ["forearm_rot","2 × 12"],["grip_squeeze","3 × 10 s"]);
       return r;}
   }
   return [];
@@ -460,17 +510,17 @@ const dow=d=>(d.getDay()+6)%7; // Mon=0
 
 function phaseOf(d){
   if(d<HEAD_START) return null;
-  if(d<EXAM_START) return {key:"head",name:"Head start",block:"home",note:"Gym closed, pinky splinted. Same routine as exam week."};
-  if(d<LYON_START) return {key:"exam",name:"Exam week",block:"home",note:"On a heavy exam day, home rehab alone is enough. Protect your sleep."};
-  if(d<GYM_START) return {key:"lyon",name:"Lyon week",block:"home",note:"Travel mode. On travel days, just the shoulder holds at any door frame."};
+  if(d<EXAM_START) return {key:"head",name:"Gym-ready prep",block:"home",note:""};
+  if(d<LYON_START) return {key:"exam",name:"Gym-ready prep",block:"home",note:""};
+  if(d<GYM_START) return {key:"lyon",name:"Gym-ready prep",block:"home",note:""};
   const wk=Math.floor(daysBetween(GYM_START,d)/7)+1;
   let block="w912",name;
-  if(wk<=2){block="w12";name="Phase 1 · Week "+wk}
-  else if(wk<=4){block="w34";name="Phase 2 · Week "+wk}
-  else if(wk<=8){block="w58";name="Phase 3 · Week "+wk}
-  else if(wk<=12){name="Phase 4 · Week "+wk}
-  else name="Keep going · Week "+wk;
-  const notes={w12:"Do the plan as written. Walk-jogs start Tue and Fri.",w34:"Band row comes in. Hip adduction machine replaces squeezes. Goblet box squat on Saturdays.",w58:"Cable rows, light floor press, Copenhagen planks and step-ups.",w912:"More sets and weight on everything at 5/10 or lower. Goalkeeper drills return."};
+  if(wk<=2){block="w12";name="Foundation"}
+  else if(wk<=4){block="w34";name="Build"}
+  else if(wk<=8){block="w58";name="Strength"}
+  else if(wk<=12){name="Back in goal"}
+  else name="Keep going";
+  const notes={w12:"Foundation. Light weights, perfect form. Walk-jogs Tue and Fri.",w34:"Build. Rows, Spanish squats and Copenhagen planks come in.",w58:"Strength. Light floor press, step-ups, longer jogs.",w912:"Back in goal. Heavier lifts, jumps, sprints and dives."};
   return {key:"gym",name,block,wk,note:notes[block]};
 }
 function defaultSessions(d){
@@ -480,10 +530,11 @@ function defaultSessions(d){
     return [["home","yoga"],["rehab","yoga"],["rehab","yoga"],["home","yoga"],["rehab","yoga"],["home","yoga"],["walk","yoga"]][w];
   }
   if(p.key==="lyon"){
-    return [["home15"],["walk","mini"],["rehab"],["home15"],["walk","mini"],["home15"],["rest","mini"]][w];
+    return [["home15"],["walk","mini"],["rehab"],["home15"],["walk","mini"],["home15"],["test","mini"]][w];
   }
   const extra=p.wk<=8?["run"]:["gk"];
-  return [["upper","yoga"],["rehab",...extra,"yoga"],["rest","yoga"],["lower","yoga"],["rehab",...extra,"yoga"],["full","yoga"],["rest","yoga"]][w];
+  const sun=[4,8,12].includes(p.wk)?["test","yoga"]:["rest","yoga"];
+  return [["upper","yoga"],["rehab",...extra,"yoga"],["rest","yoga"],["lower","yoga"],["rehab",...extra,"yoga"],["full","yoga"],sun][w];
 }
 
 /* ---------- state ---------- */
@@ -607,7 +658,7 @@ function render(){
 function dayPanel(dIso,heading){
   const d=fromIso(dIso), p=phaseOf(d), sids=sessionsFor(dIso);
   const isToday=dIso===iso(TODAY);
-  const weekLine=p&&p.key==="gym"?`<div class="weekline">Gym week ${p.wk} of 12 · ${esc(p.note)}</div>`:"";
+  const weekLine=p&&p.key==="gym"?`<div class="weekline">Week ${p.wk} of 12 · ${esc(p.note)}</div>`:p?`<div class="weekline">Gym-ready prep · gym starts Mon 16 Nov</div>`:"";
   let h=`<div class="dayhead"><div style="min-width:0"><div class="label">${isToday?"Today":esc(fmt(d,{weekday:"long"}))}</div>
     <h2>${esc(fmt(d,isToday?{weekday:"long",day:"numeric",month:"short"}:{day:"numeric",month:"long"}))}</h2>${weekLine}</div>
     <div class="arrows">${isToday?"":`<button class="iconbtn" data-act="go-today" style="font-size:13px">Today</button>`}<button class="iconbtn" data-act="prev-day" aria-label="Previous day">‹</button><button class="iconbtn" data-act="next-day" aria-label="Next day">›</button></div></div>`;
@@ -645,6 +696,9 @@ function dayPanel(dIso,heading){
     if(sid==="gk"&&p&&p.wk) note=["Week 9: pogo hops 3 × 10, landings 3 × 5","Week 10: broad jumps 3 × 5, 4 × 10 m sprints at 80%","Week 11: 6 × 10 m sprints at 90%, low dives on soft ground","Full sprints, full dives, full training"][Math.min(p.wk-9,3)];
     if(sid==="rest") note="Recovery day. An easy walk is fine.";
     if(sid==="mini") note="The bare minimum on busy days. Still counts as a win.";
+    if(sid==="test") note="Tap the test for the list. Pass = every item at 5/10 or lower. Write your numbers in Notes below.";
+    if(sid==="home") note="Shoulder, knees, groin, then wrists. Use a water bottle as your weight.";
+    if(sid==="rehab"&&(!p||p.key!=="gym")) note="Shoulder, knees, groin and wrists in 15 minutes.";
     h+=`<section class="card session" style="--sc:var(${meta.c})">
       <div class="session-head"><h3>${esc(meta.n)}</h3><span class="meta">${meta.min?meta.min+" min":""}${exs.length?" · "+done.length+"/"+exs.length:""}</span></div>
       ${note?`<p class="note">${esc(note)}</p>`:""}
@@ -829,20 +883,24 @@ function renderHabits(){
 function renderPlan(){
   const now=phaseOf(TODAY);
   const tl=[
-    ["head","Oct 26 – Nov 1","Head start","Home routine while the gym is closed and the pinky heals."],
-    ["exam","Nov 2 – 8","Exam week","Home sessions + rehab as study breaks. Yoga every night."],
-    ["lyon","Nov 9 – 15","Lyon","Three 15-min sessions, lots of walking, the 5-min minimum on travel days."],
-    ["w12","Nov 16 – 29","Phase 1 · Weeks 1–2","Gym Mon / Thu / Sat with your physio. Walk-jogs start Tue and Fri."],
-    ["w34","Nov 30 – Dec 13","Phase 2 · Weeks 3–4","Band row, adduction machine, goblet box squat."],
-    ["w58","Dec 14 – Jan 10","Phase 3 · Weeks 5–8","Cable rows, floor press, Copenhagen, step-ups, longer jogs."],
-    ["w912","Jan 11 – Feb 7","Phase 4 · Weeks 9–12","More volume, goalkeeper drills, full training by week 12."]
+    ["prep","Now – Nov 15","Gym-ready prep","Gym-ready session 3× a week, rehab on the others, 5-min minimum on busy days. Checkpoint test Sun 15 Nov."],
+    ["w12","Nov 16 – 29","Phase 1 · Foundation","Gym Mon / Thu / Sat with your physio. Light weights, perfect form. Walk-jogs Tue and Fri."],
+    ["w34","Nov 30 – Dec 13","Phase 2 · Build","Rows, Spanish squats, Copenhagen planks, goblet box squats. Checkpoint Sun 13 Dec."],
+    ["w58","Dec 14 – Jan 10","Phase 3 · Strength","Light floor press, step-ups, single-leg calves, 15-min jogs. Checkpoint Sun 10 Jan."],
+    ["w912","Jan 11 – Feb 7","Phase 4 · Back in goal","Heavier lifts, long-lever Copenhagen, jumps, sprints and dives. Final test Sun 7 Feb."]
   ];
-  const nowKey=now?(now.key==="gym"?now.block:now.key):null;
+  const nowKey=now?(now.key==="gym"?now.block:"prep"):null;
   if(!ui.editBlock) ui.editBlock=now?now.block:"w12";
   const list=exercisesFor(ui.editSid,ui.editBlock);
   const custom=!!state.custom[ui.editSid+"|"+ui.editBlock];
   const editable=["upper","lower","full","rehab","home","home15","holds","yoga"];
-  return `<h2>The plan</h2><p class="sub">2 home weeks, then 12 weeks of gym. Move to the next phase only when the current one feels fine.</p>
+  return `<h2>Your program</h2><p class="sub">Prep at home, then 12 weeks in 4 phases. Every gym day covers your shoulder, groin, knees and wrists. Pass the checkpoint to move on; if you don't, repeat 2 weeks. That's normal, not failure.</p>
+  <div class="card" style="margin-bottom:14px"><div class="label">What each problem gets</div><ul class="rules" style="margin-top:8px">
+    <li><b>Right shoulder:</b> rotator cuff, rows, face pulls, lying punch. Arm stays low, no pressing until Phase 3.</li>
+    <li><b>Groin:</b> adductor squeezes → Copenhagen planks (short, then long lever) + core.</li>
+    <li><b>Knees:</b> wall sits and Spanish squats, hip and glute work, controlled leg extensions, calves.</li>
+    <li><b>Wrists:</b> curls both ways, forearm rotations, grip work. Neutral grips in the gym.</li>
+    <li><b>Running:</b> walk-jogs from week 1, sprints and dives in Phase 4.</li></ul></div>
   <div class="card"><ol class="timeline">${tl.map(t=>`<li class="${t[0]===nowKey?"now":""}"><span class="when">${t[1]}</span><div><b>${t[2]} ${t[0]===nowKey?`<span class="badge">Now</span>`:""}</b><p>${t[3]}</p></div></li>`).join("")}</ol></div>
 
   <h2>Edit a workout</h2><p class="sub">Change sets and reps, swap exercises, or reorder. Changes apply to every day with that workout in the chosen weeks.</p>
@@ -896,7 +954,7 @@ function renderPlan(){
 }
 
 function renderLibrary(){
-  const tags=["all","shoulder","knee","groin","back","core","legs","upper","home","gym","yoga"];
+  const tags=["all","shoulder","knee","groin","wrist","back","core","legs","upper","home","gym","running","yoga"];
   const q=ui.q.toLowerCase();
   const items=Object.entries(EX).filter(([k,x])=>(ui.filter==="all"||x.t.includes(ui.filter))&&(!q||x.n.toLowerCase().includes(q)));
   return `<h2>Exercises</h2><p class="sub">Tap any exercise for how to do it and what to watch for.</p>
