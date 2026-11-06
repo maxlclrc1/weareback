@@ -700,7 +700,7 @@ function dayPanel(dIso,heading){
     if(sid==="home") note="Shoulder, knees, groin, then wrists. Use a water bottle as your weight.";
     if(sid==="rehab"&&(!p||p.key!=="gym")) note="Shoulder, knees, groin and wrists in 15 minutes.";
     h+=`<section class="card session" style="--sc:var(${meta.c})">
-      <div class="session-head"><h3>${esc(meta.n)}</h3><span class="meta">${meta.min?meta.min+" min":""}${exs.length?" · "+done.length+"/"+exs.length:""}</span></div>
+      <div class="session-head"><h3>${esc(meta.n)}</h3>${exs.length&&!["run","gk","test","walk"].includes(sid)?`<button class="btn ghost small" data-act="edit-w" data-s="${sid}" data-b="${p?p.block:"home"}">Edit</button>`:""}<span class="meta">${meta.min?meta.min+" min":""}${exs.length?" · "+done.length+"/"+exs.length:""}</span></div>
       ${note?`<p class="note">${esc(note)}</p>`:""}
       ${exs.length?`<ul class="ex-list">${exs.map((e,i)=>{const x=EX[e[0]]||{n:e[0]};const on=done.includes(i);
         return `<li class="ex-row${on?" done":""}"><input type="checkbox" id="c-${dIso}-${sid}-${i}" data-act="tick" data-d="${dIso}" data-s="${sid}" data-i="${i}" ${on?"checked":""} aria-label="Done: ${esc(x.n)}">
@@ -893,7 +893,7 @@ function renderPlan(){
   if(!ui.editBlock) ui.editBlock=now?now.block:"w12";
   const list=exercisesFor(ui.editSid,ui.editBlock);
   const custom=!!state.custom[ui.editSid+"|"+ui.editBlock];
-  const editable=["upper","lower","full","rehab","home","home15","holds","yoga"];
+  const editable=["upper","lower","full","rehab","home","home15","mini","yoga"];
   return `<h2>Your program</h2><p class="sub">Prep at home, then 12 weeks in 4 phases. Every gym day covers your shoulder, groin, knees and wrists. Pass the checkpoint to move on; if you don't, repeat 2 weeks. That's normal, not failure.</p>
   <div class="card" style="margin-bottom:14px"><div class="label">What each problem gets</div><ul class="rules" style="margin-top:8px">
     <li><b>Right shoulder:</b> rotator cuff, rows, face pulls, lying punch. Arm stays low, no pressing until Phase 3.</li>
@@ -1002,6 +1002,7 @@ document.addEventListener("click",e=>{
   if(a==="open-review"){ui.tab="review";ui.reviewWeek=mondayOf(TODAY);render();window.scrollTo(0,0);return}
   if(a==="rev-prev"||a==="rev-next"){ui.reviewWeek=addDays(ui.reviewWeek||mondayOf(TODAY),a==="rev-prev"?-7:7);render();return}
   if(a==="go-today"){ui.tab="today";ui.day=iso(TODAY);render();window.scrollTo(0,0);return}
+  if(a==="edit-w"){ui.editSid=t.dataset.s;ui.editBlock=t.dataset.b;ui.tab="plan";render();const e=document.getElementById("editSid");if(e)e.scrollIntoView({block:"center"});return}
   if(a==="go-habits"){ui.tab="habits";render();window.scrollTo(0,0);return}
   if(a==="add-h"){addHabit();return}
   if(a==="h-day"){const x=state.habits.find(h=>h.id===t.dataset.h),dd=+t.dataset.day;if(!x)return;
