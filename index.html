@@ -411,6 +411,15 @@ const EX = {
   test_item:{n:"Checkpoint test",t:["test"],s:"Do each item, write your pain number in Notes",
     how:["Wall sit: 3 × 45 s","Copenhagen plank, short lever: 3 × 20 s each side","Side-lying external rotation: 2 × 15 with 2 kg","Single-leg calf raise: 15 each leg","From Phase 2 on: add the running step you're on"],
     cue:"Pass = every item at 5/10 or lower, settled by the next morning.",joint:"Passed? Move on. Not yet? Repeat the last 2 weeks, then test again. That's normal."},
+  elbow_iso:{n:"Tennis elbow hold",t:["elbow","wrist","home","gym"],s:"1–2 kg, palm down",
+    how:["Sit with your forearm on a table or your thigh, palm down, hand hanging off the edge.","Hold a 1–2 kg weight (or a full water bottle) with your wrist level.","Hold still for 45 seconds, then rest 1 minute."],
+    cue:"Moderate effort, pain at 5/10 or lower. It often eases the pain within minutes.",joint:"Calms the tendon on the outside of the elbow before you load it harder."},
+  elbow_ecc:{n:"Slow lowering, palm down",t:["elbow","wrist","home","gym"],s:"Help it up, lower it slowly",
+    how:["Same position, palm down, weight in your sore-side hand.","Use your other hand to lift the weight up to the top.","Let go and lower it slowly with the sore arm over 4 seconds.","Repeat. Do both arms if both hurt."],
+    cue:"The slow lowering is the whole point. Add weight when 3 × 15 gets easy.",joint:"This is the step that rebuilds the tendon. Expect about 3 months for big changes."},
+  tyler_twist:{n:"Tyler twist (FlexBar)",t:["elbow","wrist","home","gym"],s:"FlexBar or a rolled towel",
+    how:["Hold the bar upright in your sore-side hand, wrist bent back.","Grab the top with your other hand, palm away, and twist it so it's horizontal.","Bring your arms out straight in front of you.","Let the sore wrist slowly untwist over 4 seconds."],
+    cue:"No FlexBar? Wring a rolled towel and slowly let the sore side untwist.",joint:"One of the best-researched exercises for tennis elbow."},
   city_walk:{n:"Walk",t:["recovery"],s:"Any pace",how:["Walk the city, explore, enjoy it."],cue:"Counts as recovery movement.",joint:""},
   y_breath:{n:"Breathing",t:["yoga"],s:"Lying on your back",how:["Lie on your back, knees bent.","In through the nose for 4 seconds, out for 6 seconds."],cue:"Long exhale calms everything down.",joint:""},
   y_catcow:{n:"Cat-cow on forearms",t:["yoga","back"],s:"8 slow rounds",how:["On forearms and knees.","Round your back up, then let it gently arch down.","Move with your breath."],cue:"Forearms keep the wrists out of it.",joint:""},
@@ -443,6 +452,8 @@ const SESSION_ORDER=["upper","lower","full","rehab","home","home15","mini","run"
 const BLOCKS={home:"Prep (home)",w12:"Phase 1 · Foundation",w34:"Phase 2 · Build",w58:"Phase 3 · Strength",w912:"Phase 4 · Back in goal"};
 const YOGA=[["y_breath","1 min"],["y_catcow","8 rounds"],["y_fig4","45 s each"],["y_twist","45 s each"],["y_bridge","5 × 5 s"],["y_ham","45 s each"],["y_child","1 min"],["y_legs","2–3 min"]];
 const late=w=>w==="w58"||w==="w912";
+// Tennis elbow: holds first, then slow lowering, then the Tyler twist
+const elbow=w=>w==="home"?[["elbow_iso","5 × 45 s"]]:w==="w12"?[["elbow_iso","3 × 45 s"],["elbow_ecc","3 × 15"]]:[["elbow_ecc","3 × 15"],["tyler_twist","3 × 15"]];
 
 function base(sid,w){
   switch(sid){
@@ -452,15 +463,15 @@ function base(sid,w){
       ["wall_sit","3 × 45 s"],
       w==="home"||w==="w12"?["add_squeeze","5 × 10 s"]:["copenhagen_short","3 × 15–20 s each (on a sofa)"],
       ["side_add","2 × 12 each"],["clamshell","2 × 15 each"],
-      ["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"]];
+      ["wrist_curl","2 × 15"],...elbow(w)];
     case "home": return [
       ["sl_er","3 × 15 each"],["towel_row","3 × 15"],["lying_punch","3 × 12"],
       ["wall_sit","4 × 45 s"],["glute_bridge","3 × 12"],["clamshell","2 × 15 each"],["calf_raise","3 × 15"],
       ["add_squeeze","5 × 10 s"],["side_add","3 × 12 each"],["side_plank","2 × 30 s each"],["dead_bug","3 × 8 each"],
-      ["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"],["forearm_rot","2 × 12"],["grip_squeeze","3 × 10 s"]];
+      ["wrist_curl","2 × 15"],...elbow(w),["forearm_rot","2 × 12"],["grip_squeeze","3 × 10 s"]];
     case "home15": return [
       ["sl_er","2 × 15 each"],["towel_row","2 × 15"],["wall_sit","3 × 45 s"],["glute_bridge","2 × 12"],
-      ["add_squeeze","5 × 10 s"],["side_add","2 × 12 each"],["calf_raise","2 × 15"],["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"]];
+      ["add_squeeze","5 × 10 s"],["side_add","2 × 12 each"],["calf_raise","2 × 15"],["wrist_curl","2 × 15"],...elbow(w)];
     case "holds": return [["hold_abd","1 × 60 s"],["hold_er","1 × 60 s"],["hold_ir","1 × 60 s"]];
     case "yoga": return YOGA;
     case "walk": return [["city_walk","30+ min"]];
@@ -473,7 +484,7 @@ function base(sid,w){
       if(w!=="w12") r.push(["cable_row_1arm","3 × 10 each"]);
       if(late(w)) r.push(["floor_press",w==="w912"?"3 × 8–10":"3 × 10 (light)"]);
       r.push(["face_pull","3 × 15"],["lying_punch","3 × 12"],["hammer_curl","3 × 10–12"],["rope_pushdown","3 × 12–15"],
-        ["wrist_curl","2 × 15"],["rev_wrist_curl","2 × 15"]);
+        ["wrist_curl","2 × 15"],...elbow(w));
       return r;}
     case "lower": {
       const r=[w==="w12"?["wall_sit","4 × 45 s"]:["spanish_squat","4 × 45 s"]];
@@ -489,7 +500,7 @@ function base(sid,w){
       const r=[["sl_er","2 × 15 each"],["lat_pulldown","3 × 10"],["seated_row","3 × 12"]];
       r.push(w==="w12"?["glute_bridge","3 × 12"]:["goblet_box_squat","3 × 8–10"]);
       r.push(["leg_ext","2 × 15"],["clamshell","2 × 15 each"],["face_pull","2 × 15"],["pallof","3 × 10 each"],["dead_bug","3 × 8 each"],
-        ["forearm_rot","2 × 12"],["grip_squeeze","3 × 10 s"]);
+        ...elbow(w),["forearm_rot","2 × 12"],["grip_squeeze","3 × 10 s"]);
       return r;}
   }
   return [];
@@ -899,7 +910,8 @@ function renderPlan(){
     <li><b>Right shoulder:</b> rotator cuff, rows, face pulls, lying punch. Arm stays low, no pressing until Phase 3.</li>
     <li><b>Groin:</b> adductor squeezes → Copenhagen planks (short, then long lever) + core.</li>
     <li><b>Knees:</b> wall sits and Spanish squats, hip and glute work, controlled leg extensions, calves.</li>
-    <li><b>Wrists:</b> curls both ways, forearm rotations, grip work. Neutral grips in the gym.</li>
+    <li><b>Wrists:</b> curls, forearm rotations, grip work. Neutral grips in the gym.</li>
+    <li><b>Tennis elbow:</b> holds first, slow lowering from Phase 1, Tyler twist from Phase 2. Neutral grips, light pushdowns, straps on heavy pulls.</li>
     <li><b>Running:</b> walk-jogs from week 1, sprints and dives in Phase 4.</li></ul></div>
   <div class="card"><ol class="timeline">${tl.map(t=>`<li class="${t[0]===nowKey?"now":""}"><span class="when">${t[1]}</span><div><b>${t[2]} ${t[0]===nowKey?`<span class="badge">Now</span>`:""}</b><p>${t[3]}</p></div></li>`).join("")}</ol></div>
 
@@ -954,7 +966,7 @@ function renderPlan(){
 }
 
 function renderLibrary(){
-  const tags=["all","shoulder","knee","groin","wrist","back","core","legs","upper","home","gym","running","yoga"];
+  const tags=["all","shoulder","knee","groin","elbow","wrist","back","core","legs","upper","home","gym","running","yoga"];
   const q=ui.q.toLowerCase();
   const items=Object.entries(EX).filter(([k,x])=>(ui.filter==="all"||x.t.includes(ui.filter))&&(!q||x.n.toLowerCase().includes(q)));
   return `<h2>Exercises</h2><p class="sub">Tap any exercise for how to do it and what to watch for.</p>
